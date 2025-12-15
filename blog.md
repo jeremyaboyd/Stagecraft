@@ -2,6 +2,10 @@
 
 A narrative-focused, text-adventure, scripting language to be run with the STAGECRAFT DIRECTOR.
 
+## Day 1
+
+**No updates**
+
 ## Day 2
 
 Woops, I started late :D
