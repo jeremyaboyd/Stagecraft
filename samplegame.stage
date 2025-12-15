@@ -1,0 +1,57 @@
+PLAY "Imprisoned" VERSION 0.0.1
+
+ON START:
+    GO CellD24
+
+PROP journal "Personal Journal":
+    CAN TAKE, GIVE, READ, USE
+    TAGS BOOKS
+
+    ON TAKE:
+        NARRATE "Your only real posession. Keep it close."
+    
+    ON USE:
+        IF new_info IS []:
+            NARRATE "There is nothing to write down."
+        ELSE:
+            FOREACH info IN new_info:
+                NARRATE info.narration
+                PUSH info.journal ON player.journal
+            SET new_info: []
+
+    ON READ:
+        IF player.journal IS []:
+            NARRATE "You haven't written anything down yet."
+        ELSE:
+            FOREACH entry IN player.journal:
+                NARRATE entry
+
+    ON GIVE TO character:
+        NARRATE "Are you sure you want to give your journal to ${character}?"
+        CHOOSE:
+            "Yes":
+                CANCEL
+            "No":
+                RETURN
+
+PROP toilet "Your Toilet"
+    CAN USE
+
+    ON USE:
+        IF player.bladder > 0:
+            NARRATE "You relieve yourself."
+            SET player.bladder: 0
+        ELSE:
+            NARRATE "You wiggle and shake, but nothing comes out."
+
+        IF RAND(10) > 7:
+            NARRATE "When zipping back up, you got caught in the fly."
+            SAY "YEOWCH!"
+            SET player.health: player.health - 5
+    
+SCENE CellD24 "Cell D:24"
+    DESCRIPTION "A tiny room without a window. The only thing between you and the rest of the cell block are a few bars and a door."
+    EXITS:
+        WHEN Cells.D24.open IS true: CellBlockD
+
+    
