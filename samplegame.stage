@@ -1,6 +1,9 @@
 PLAY "Imprisoned" VERSION 0.0.1
 
-ON START:
+ON NEW:
+    NARRATE "Today is the first day of the rest of your life."
+    NARRATE "There was no jury, judge, or justice. And yet, here you are, locked up."
+    NARRATE "Keep to yourself, and maybe you can make it out the other side."
     GO CellD24
 
 PROP journal "Personal Journal":
@@ -11,7 +14,7 @@ PROP journal "Personal Journal":
         NARRATE "Your only real posession. Keep it close."
     
     ON USE:
-        IF new_info IS []:
+        IF new_info = []:
             NARRATE "There is nothing to write down."
         ELSE:
             FOREACH info IN new_info:
@@ -20,7 +23,7 @@ PROP journal "Personal Journal":
             SET new_info: []
 
     ON READ:
-        IF player.journal IS []:
+        IF player.journal = []:
             NARRATE "You haven't written anything down yet."
         ELSE:
             FOREACH entry IN player.journal:
@@ -30,9 +33,9 @@ PROP journal "Personal Journal":
         NARRATE "Are you sure you want to give your journal to ${character}?"
         CHOOSE:
             "Yes":
-                CANCEL
-            "No":
                 RETURN
+            "No":
+                CANCEL
 
 PROP toilet "Your Toilet"
     CAN USE
@@ -49,9 +52,7 @@ PROP toilet "Your Toilet"
             SAY "YEOWCH!"
             SET player.health: player.health - 5
     
-SCENE CellD24 "Cell D:24"
-    DESCRIPTION "A tiny room without a window. The only thing between you and the rest of the cell block are a few bars and a door."
+SCENE cellD24 "Cell D:24"
+    DESCRIPTION "A tiny room without a window. The only thing between you and the rest of the cell block are a few bars and a steel door."
     EXITS:
-        WHEN Cells.D24.open IS true: CellBlockD
-
-    
+        WHEN cells.d24.open = true: cellBlockD

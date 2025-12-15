@@ -1,6 +1,6 @@
-# STAGECRAFT
+# STAGECRAFT - A live blog
 
-A narrative-focused, text-adventure, scripting language to be run with the STAGECRAFT DIRECTOR.
+Well I will be live blogging as I go. Posting my own question to myself, writing my answers down. Almost like I have a friend.
 
 ## Day 1
 
@@ -105,3 +105,9 @@ Time to think about the front end, and how the player will play the game. The si
 Maybe I can make it appear like an old black and green CRT using some CSS... and by me... I mean Claude.
 
 I think that COULD be cool, but also simple. I will start with that idea, and if there is a lot of time, maybe I can recreate it in Unity after.
+
+**4:54PM** 
+
+I'm getting ADHD sidetracked. I'm back on the language, and realized `ON START` makes no sense. It should be `ON NEW` as it is specific to starting a new game. But by doing that, I'd need to probably also add `ON LOAD` and `ON SAVE` but those feel less useful, so maybe I don't?
+
+Either way, I should change the sample game to `ON NEW` and possibly narrate an introduction.
