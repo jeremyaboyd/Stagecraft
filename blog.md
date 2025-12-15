@@ -10,7 +10,7 @@ A narrative-focused, text-adventure, scripting language to be run with the STAGE
 
 Woops, I started late :D
 
-**2025-12-15 3:45PM EST**
+**3:45PM EST**
 
 Ideation of the language - For the past couple of months, I've been playing around with various generative AI models to try and create a AI short film, start to finish in AI. While doing that, when having an LLM generate a screenplay, it wasn't writing it how I, a barely-literate, non-actor, software developer, would write it.
 
@@ -20,11 +20,11 @@ Last night I told Austin that I was probably going to just do something boring a
 
 So starting now, I will blog this in "real-time". Updating the blog as I progress.
 
-**2025-12-15 4:20PM EST**
+**4:20PM EST**
 
 Blaze it.
 
-**2025-12-15 4:21PM EST**
+**4:21PM EST**
 
 Now I have a bit of a sample game I'm not sure if the syntax is consistent, it's just been a flow:
 
@@ -97,3 +97,11 @@ What I'm NOT liking:
 1. Colons - They have multiple uses depending on the context, and an overloaded operator in the language seems like it might be a bad idea.
 2. NARRATE & SAY - I'm not currently sure if these will have enough of a different meaning than to combine into a single call like 
     - `SAY "narration" ["who"]` - this way you can leave off "who" is saying, and it will be a narration.
+
+**4:45PM**
+
+Time to think about the front end, and how the player will play the game. The simplest solution would be something like an HTML/CSS/JS front end.
+
+Maybe I can make it appear like an old black and green CRT using some CSS... and by me... I mean Claude.
+
+I think that COULD be cool, but also simple. I will start with that idea, and if there is a lot of time, maybe I can recreate it in Unity after.
