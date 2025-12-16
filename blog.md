@@ -123,3 +123,23 @@ Things I want to get completed, and if I don't I will scream:
 1. Finish the language specification
 2. Have Claude write the GUI terminal looking thing.
 3. Start building the interpreter: called "Stagecraft Director" - doesn't need to be completed, just started. I'll scream if I don't start it!
+
+**3:25PM**
+
+First prompt into Claude. Let's see if it works.
+
+> Can you write a client-side HTML/CSS/JS console.
+> 
+> It should behave similar to a terminal emulator. Use a nice console-style monospace font, style it to look similar to an old-school black and green CRT screen.
+
+**3:30PM**
+
+We're cooked fam... First try and it is nearly perfect.
+
+![First Try](./blog_assets/terminal-first-try.gif)
+
+It already has the retro look with glow and scan lines. I didn't expect it to go that far!
+
+Now that it did that so easily, I'm scared I will be the reason I don't finish today. I can't blame the stupid AI dude.
+
+Existential dread coming in 3... 2... 1
