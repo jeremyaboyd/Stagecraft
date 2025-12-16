@@ -10,7 +10,7 @@ Well I will be live blogging as I go. Posting my own question to myself, writing
 
 Woops, I started late :D
 
-**3:45PM EST**
+**3:45PM**
 
 Ideation of the language - For the past couple of months, I've been playing around with various generative AI models to try and create a AI short film, start to finish in AI. While doing that, when having an LLM generate a screenplay, it wasn't writing it how I, a barely-literate, non-actor, software developer, would write it.
 
@@ -20,11 +20,11 @@ Last night I told Austin that I was probably going to just do something boring a
 
 So starting now, I will blog this in "real-time". Updating the blog as I progress.
 
-**4:20PM EST**
+**4:20PM**
 
 Blaze it.
 
-**4:21PM EST**
+**4:21PM**
 
 Now I have a bit of a sample game I'm not sure if the syntax is consistent, it's just been a flow:
 
@@ -111,3 +111,15 @@ I think that COULD be cool, but also simple. I will start with that idea, and if
 I'm getting ADHD sidetracked. I'm back on the language, and realized `ON START` makes no sense. It should be `ON NEW` as it is specific to starting a new game. But by doing that, I'd need to probably also add `ON LOAD` and `ON SAVE` but those feel less useful, so maybe I don't?
 
 Either way, I should change the sample game to `ON NEW` and possibly narrate an introduction.
+
+## Day 3
+
+**3:18PM**
+
+After spending 8 hours in front of a computer today, already, I've decided to spend another 4-5 hours working on this stupid idea. I'm definitely not having a bad day.
+
+Things I want to get completed, and if I don't I will scream:
+
+1. Finish the language specification
+2. Have Claude write the GUI terminal looking thing.
+3. Start building the interpreter: called "Stagecraft Director" - doesn't need to be completed, just started. I'll scream if I don't start it!
