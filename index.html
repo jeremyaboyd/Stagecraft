@@ -1,0 +1,545 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Retro Console</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=VT323&display=swap');
+    
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+    
+    body {
+      background: #0a0a0a;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+    
+    .monitor {
+      background: #1a1a1a;
+      border-radius: 20px;
+      padding: 30px;
+      box-shadow: 
+        0 0 20px rgba(0, 0, 0, 0.8),
+        inset 0 0 10px rgba(0, 0, 0, 0.5);
+      max-width: 900px;
+      width: 100%;
+    }
+    
+    .screen-container {
+      background: #000;
+      border-radius: 20px;
+      overflow: hidden;
+      position: relative;
+      transform: perspective(800px) rotateX(2deg);
+      transform-style: preserve-3d;
+    }
+    
+    .screen-bulge {
+      position: relative;
+      overflow: hidden;
+      border-radius: 20px;
+    }
+    
+    .screen-bulge::before {
+      content: '';
+      position: absolute;
+      top: -10%;
+      left: -10%;
+      right: -10%;
+      bottom: -10%;
+      background: radial-gradient(
+        ellipse 120% 150% at 50% 50%,
+        transparent 0%,
+        transparent 40%,
+        rgba(0, 0, 0, 0.15) 60%,
+        rgba(0, 0, 0, 0.4) 80%,
+        rgba(0, 0, 0, 0.8) 100%
+      );
+      pointer-events: none;
+      z-index: 15;
+      border-radius: 20px;
+    }
+    
+    /* Glass reflection */
+    .screen-bulge::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(
+        135deg,
+        rgba(255, 255, 255, 0.1) 0%,
+        transparent 30%,
+        transparent 70%,
+        rgba(255, 255, 255, 0.03) 100%
+      );
+      pointer-events: none;
+      z-index: 16;
+      border-radius: 20px;
+    }
+    
+    .terminal {
+      font-family: 'VT323', monospace;
+      font-size: 18px;
+      color: #33ff33;
+      background: #0d0d0d;
+      padding: 20px;
+      height: 500px;
+      overflow-y: auto;
+      position: relative;
+      text-shadow: 0 0 5px #33ff33, 0 0 10px #33ff3366;
+    }
+    
+    /* Scanlines overlay */
+    .terminal::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: repeating-linear-gradient(
+        0deg,
+        rgba(0, 0, 0, 0.15),
+        rgba(0, 0, 0, 0.15) 1px,
+        transparent 1px,
+        transparent 2px
+      );
+      pointer-events: none;
+      z-index: 10;
+    }
+    
+    /* CRT flicker animation */
+    .terminal::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(18, 16, 16, 0.1);
+      opacity: 0;
+      pointer-events: none;
+      animation: flicker 0.15s infinite;
+      z-index: 11;
+    }
+    
+    @keyframes flicker {
+      0% { opacity: 0.27861; }
+      5% { opacity: 0.34769; }
+      10% { opacity: 0.23604; }
+      15% { opacity: 0.90626; }
+      20% { opacity: 0.18128; }
+      25% { opacity: 0.83891; }
+      30% { opacity: 0.65583; }
+      35% { opacity: 0.67807; }
+      40% { opacity: 0.26559; }
+      45% { opacity: 0.84693; }
+      50% { opacity: 0.96019; }
+      55% { opacity: 0.08594; }
+      60% { opacity: 0.20313; }
+      65% { opacity: 0.71988; }
+      70% { opacity: 0.53455; }
+      75% { opacity: 0.37288; }
+      80% { opacity: 0.71428; }
+      85% { opacity: 0.70419; }
+      90% { opacity: 0.7003; }
+      95% { opacity: 0.36108; }
+      100% { opacity: 0.24387; }
+    }
+    
+    /* Screen curvature effect */
+    .screen-container::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: radial-gradient(
+        ellipse at center,
+        transparent 0%,
+        rgba(0, 0, 0, 0.2) 80%,
+        rgba(0, 0, 0, 0.5) 100%
+      );
+      pointer-events: none;
+      z-index: 12;
+      border-radius: 20px;
+    }
+    
+    /* Bulge highlight on edges */
+    .screen-container::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      border-radius: 20px;
+      box-shadow: 
+        inset 0 0 100px rgba(0, 0, 0, 0.5),
+        inset 0 0 50px rgba(0, 0, 0, 0.3),
+        inset 3px 3px 10px rgba(255, 255, 255, 0.05),
+        inset -3px -3px 10px rgba(0, 0, 0, 0.3);
+      pointer-events: none;
+      z-index: 13;
+    }
+    
+    .output-line {
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      line-height: 1.4;
+    }
+    
+    .input-line {
+      display: flex;
+      align-items: center;
+      margin-top: 5px;
+    }
+    
+    .prompt {
+      color: #33ff33;
+      margin-right: 8px;
+      white-space: nowrap;
+    }
+    
+    .input-field {
+      flex: 1;
+      background: transparent;
+      border: none;
+      outline: none;
+      font-family: 'VT323', monospace;
+      font-size: 18px;
+      color: #33ff33;
+      caret-color: #33ff33;
+      text-shadow: 0 0 5px #33ff33, 0 0 10px #33ff3366;
+    }
+    
+    .cursor {
+      display: inline-block;
+      width: 10px;
+      height: 18px;
+      background: #33ff33;
+      animation: blink 1s step-end infinite;
+      box-shadow: 0 0 5px #33ff33, 0 0 10px #33ff33;
+    }
+    
+    @keyframes blink {
+      50% { opacity: 0; }
+    }
+    
+    .error {
+      color: #ff3333;
+      text-shadow: 0 0 5px #ff3333, 0 0 10px #ff333366;
+    }
+    
+    .success {
+      color: #33ffff;
+      text-shadow: 0 0 5px #33ffff, 0 0 10px #33ffff66;
+    }
+    
+    .warning {
+      color: #ffff33;
+      text-shadow: 0 0 5px #ffff33, 0 0 10px #ffff3366;
+    }
+    
+    /* Custom scrollbar */
+    .terminal::-webkit-scrollbar {
+      width: 8px;
+    }
+    
+    .terminal::-webkit-scrollbar-track {
+      background: #0d0d0d;
+    }
+    
+    .terminal::-webkit-scrollbar-thumb {
+      background: #33ff3366;
+      border-radius: 4px;
+    }
+    
+    .terminal::-webkit-scrollbar-thumb:hover {
+      background: #33ff33;
+    }
+    
+    /* Power LED */
+    .monitor-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 15px;
+      padding: 0 10px;
+    }
+    
+    .led {
+      width: 10px;
+      height: 10px;
+      background: #33ff33;
+      border-radius: 50%;
+      box-shadow: 0 0 5px #33ff33, 0 0 10px #33ff33, 0 0 15px #33ff33;
+    }
+    
+    .brand {
+      font-family: 'VT323', monospace;
+      color: #444;
+      font-size: 14px;
+      letter-spacing: 2px;
+    }
+  </style>
+</head>
+<body>
+  <div class="monitor">
+    <div class="screen-container">
+      <div class="screen-bulge">
+        <div class="terminal" id="terminal">
+        <div class="output-line success">╔════════════════════════════════════════════════════════╗</div>
+        <div class="output-line success">║         RETRO CONSOLE v1.0 - Welcome, User             ║</div>
+        <div class="output-line success">╚════════════════════════════════════════════════════════╝</div>
+        <div class="output-line"></div>
+        <div class="output-line">Type 'help' for available commands.</div>
+        <div class="output-line"></div>
+        <div class="input-line">
+          <span class="prompt">guest@console:~$</span>
+          <input type="text" class="input-field" id="input" autofocus autocomplete="off" spellcheck="false">
+        </div>
+      </div>
+      </div>
+    </div>
+    <div class="monitor-footer">
+      <div class="led"></div>
+      <div class="brand">RETRO-TERM</div>
+    </div>
+  </div>
+
+  <script>
+    const terminal = document.getElementById('terminal');
+    const input = document.getElementById('input');
+    const commandHistory = [];
+    let historyIndex = -1;
+
+    const commands = {
+      help: () => {
+        return `Available commands:
+  help      - Show this help message
+  clear     - Clear the terminal screen
+  echo      - Echo text back (usage: echo <text>)
+  date      - Display current date and time
+  whoami    - Display current user
+  uname     - Display system information
+  ls        - List files (simulated)
+  cat       - Display file contents (simulated)
+  pwd       - Print working directory
+  history   - Show command history
+  calc      - Simple calculator (usage: calc <expression>)
+  color     - Change text color (usage: color <green|amber|white>)
+  matrix    - Display matrix rain effect
+  about     - About this terminal`;
+      },
+      
+      clear: () => {
+        const inputLine = terminal.querySelector('.input-line');
+        terminal.innerHTML = '';
+        terminal.appendChild(inputLine);
+        return null;
+      },
+      
+      echo: (args) => args.join(' ') || '',
+      
+      date: () => new Date().toString(),
+      
+      whoami: () => 'guest',
+      
+      uname: () => 'RetroOS 1.0.0 x86_64 GNU/Linux',
+      
+      pwd: () => '/home/guest',
+      
+      ls: (args) => {
+        const files = {
+          '/home/guest': 'Documents  Downloads  Pictures  .bashrc  readme.txt',
+          'Documents': 'notes.txt  projects/',
+          'Downloads': 'file1.zip  image.png',
+          'Pictures': 'photo1.jpg  photo2.jpg  wallpaper.png'
+        };
+        const dir = args[0] || '/home/guest';
+        return files[dir] || `ls: cannot access '${dir}': No such file or directory`;
+      },
+      
+      cat: (args) => {
+        const files = {
+          'readme.txt': 'Welcome to RetroConsole!\nThis is a simulated terminal environment.\nHave fun exploring!',
+          '.bashrc': '# ~/.bashrc\nexport PS1="guest@console:~$ "\nalias ll="ls -la"',
+          'notes.txt': 'TODO:\n- Learn more terminal commands\n- Build something cool\n- Have fun!'
+        };
+        if (!args[0]) return 'cat: missing file operand';
+        return files[args[0]] || `cat: ${args[0]}: No such file or directory`;
+      },
+      
+      history: () => {
+        if (commandHistory.length === 0) return 'No commands in history';
+        return commandHistory.map((cmd, i) => `  ${i + 1}  ${cmd}`).join('\n');
+      },
+      
+      calc: (args) => {
+        if (!args.length) return 'Usage: calc <expression>\nExample: calc 2 + 2';
+        try {
+          const expr = args.join('').replace(/[^0-9+\-*/.()]/g, '');
+          const result = Function('"use strict"; return (' + expr + ')')();
+          return `= ${result}`;
+        } catch {
+          return 'Error: Invalid expression';
+        }
+      },
+      
+      color: (args) => {
+        const colors = {
+          green: '#33ff33',
+          amber: '#ffb000',
+          white: '#ffffff'
+        };
+        const color = args[0]?.toLowerCase();
+        if (!color || !colors[color]) {
+          return 'Usage: color <green|amber|white>';
+        }
+        document.documentElement.style.setProperty('--term-color', colors[color]);
+        terminal.style.color = colors[color];
+        terminal.style.textShadow = `0 0 5px ${colors[color]}, 0 0 10px ${colors[color]}66`;
+        input.style.color = colors[color];
+        input.style.textShadow = `0 0 5px ${colors[color]}, 0 0 10px ${colors[color]}66`;
+        document.querySelectorAll('.prompt').forEach(p => {
+          p.style.color = colors[color];
+        });
+        return `Terminal color changed to ${color}`;
+      },
+      
+      matrix: () => {
+        let output = '';
+        const chars = 'ﾊﾐﾋｰｳｼﾅﾓﾆｻﾜﾂｵﾘｱﾎﾃﾏｹﾒｴｶｷﾑﾕﾗｾﾈｽﾀﾇﾍ01234567890';
+        for (let i = 0; i < 5; i++) {
+          let line = '';
+          for (let j = 0; j < 50; j++) {
+            line += chars[Math.floor(Math.random() * chars.length)];
+          }
+          output += line + '\n';
+        }
+        return output + '\n[Matrix rain simulation - press any key to continue]';
+      },
+      
+      about: () => {
+        return `RetroConsole v1.0
+━━━━━━━━━━━━━━━━━━━━━━━━━━
+A nostalgic terminal emulator
+styled after classic CRT monitors.
+
+Built with HTML, CSS & JavaScript
+Featuring scanlines, phosphor glow,
+and authentic retro aesthetics.`;
+      }
+    };
+
+    function processCommand(cmd) {
+      const parts = cmd.trim().split(/\s+/);
+      const command = parts[0].toLowerCase();
+      const args = parts.slice(1);
+      
+      if (!command) return '';
+      
+      if (commands[command]) {
+        return commands[command](args);
+      }
+      
+      return `Command not found: ${command}. Type 'help' for available commands.`;
+    }
+
+    function addOutput(text, className = '') {
+      const inputLine = terminal.querySelector('.input-line');
+      
+      if (text === null) return;
+      
+      const lines = text.split('\n');
+      lines.forEach(line => {
+        const div = document.createElement('div');
+        div.className = `output-line ${className}`;
+        div.textContent = line;
+        terminal.insertBefore(div, inputLine);
+      });
+    }
+
+    function addCommandLine(cmd) {
+      const inputLine = terminal.querySelector('.input-line');
+      const div = document.createElement('div');
+      div.className = 'output-line';
+      div.innerHTML = `<span class="prompt">guest@console:~$</span> ${cmd}`;
+      terminal.insertBefore(div, inputLine);
+    }
+
+    input.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') {
+        const cmd = input.value;
+        addCommandLine(cmd);
+        
+        if (cmd.trim()) {
+          commandHistory.push(cmd);
+          historyIndex = commandHistory.length;
+          
+          const output = processCommand(cmd);
+          if (output) {
+            const isError = output.includes('not found') || output.includes('Error') || output.includes('cannot access');
+            addOutput(output, isError ? 'error' : '');
+          }
+        }
+        
+        addOutput('');
+        input.value = '';
+        terminal.scrollTop = terminal.scrollHeight;
+      }
+      
+      // Command history navigation
+      if (e.key === 'ArrowUp') {
+        e.preventDefault();
+        if (historyIndex > 0) {
+          historyIndex--;
+          input.value = commandHistory[historyIndex];
+        }
+      }
+      
+      if (e.key === 'ArrowDown') {
+        e.preventDefault();
+        if (historyIndex < commandHistory.length - 1) {
+          historyIndex++;
+          input.value = commandHistory[historyIndex];
+        } else {
+          historyIndex = commandHistory.length;
+          input.value = '';
+        }
+      }
+      
+      // Tab completion (basic)
+      if (e.key === 'Tab') {
+        e.preventDefault();
+        const partial = input.value.trim().toLowerCase();
+        const matches = Object.keys(commands).filter(cmd => cmd.startsWith(partial));
+        if (matches.length === 1) {
+          input.value = matches[0] + ' ';
+        }
+      }
+    });
+
+    // Keep focus on input
+    terminal.addEventListener('click', () => input.focus());
+    document.addEventListener('keydown', (e) => {
+      if (!e.ctrlKey && !e.altKey && !e.metaKey) {
+        input.focus();
+      }
+    });
+  </script>
+</body>
+</html>

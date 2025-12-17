@@ -143,3 +143,16 @@ It already has the retro look with glow and scan lines. I didn't expect it to go
 Now that it did that so easily, I'm scared I will be the reason I don't finish today. I can't blame the stupid AI dude.
 
 Existential dread coming in 3... 2... 1
+
+**5:00PM**
+
+Well, at least I can play drums better than Claude... I hope.
+
+Time to figure out how to write an interpreter.
+
+## Day 4
+
+**7:45AM**
+
+Well I didn't finish what I wanted yesterday because I didn't spend hours working, only about 30 minutes. And then I got distracted with Homeland (the television show - I love Claire Danes and I never saw it before). In fact, this is a terrible time to even start this stupid langjam.
+
